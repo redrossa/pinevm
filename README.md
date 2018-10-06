@@ -9,40 +9,40 @@ These following instructions will guide you on how to install Pine Virtual Machi
 <table>
     <thead>
         <tr>
-            <th style="text-align:center;">Operating System</th>
-            <th style="text-align:center;">Architecture</th>
-            <th style="text-align:center;">Status</th>
-            <th style="text-align:center;">Note</th>
+            <th>Operating System</th>
+            <th>Architecture</th>
+            <th>Status</th>
+            <th>Note</th>
         </tr>
     </thread>
     <tbody>
         <tr>
-            <td style="text-align:center;">MacOS 10.13+</td>
-            <td style="text-align:center;">64-bit</td>
-            <td style="text-align:center;">&#10003;</td>
-            <td style="text-align:center;">Official</td>
+            <td align="center">MacOS 10.13+</td>
+            <td align="center">64-bit</td>
+            <td align="center">&#10003;</td>
+            <td align="center">Official</td>
         </tr>
         <tr>
-            <td rowspan=2 style="text-align:center;">Windows 10+</td>
-            <td style="text-align:center;">64-bit</td>
+            <td rowspan=2 align="center">Windows 10+</td>
+            <td align="center">64-bit</td>
             <td></td>
-            <td style="text-align:center;">Planned</td>
+            <td align="center">Planned</td>
         </tr>
         <tr>
-            <td style="text-align:center;">32-bit</td>
+            <td align="center">32-bit</td>
             <td></td>
-            <td style="text-align:center;">Planned</td>
+            <td align="center">Planned</td>
         </tr>
         <tr>
-            <td rowspan=2 style="text-align:center;">Generic Linux</td>
-            <td style="text-align:center;">64-bit</td>
+            <td rowspan=2 align="center">Generic Linux</td>
+            <td align="center">64-bit</td>
             <td></td>
-            <td style="text-align:center;">TBD</td>
+            <td align="center">TBD</td>
         </tr>
         <tr>
-            <td style="text-align:center;">32-bit</td>
+            <td align="center">32-bit</td>
             <td></td>
-            <td style="text-align:center;">TBD</td>
+            <td align="center">TBD</td>
         </tr>
     </tbody>
 </table>
