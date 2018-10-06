@@ -68,7 +68,7 @@ These instructions will guide you on how to deploy Pine Virtual Machine on your 
 
 ### Running the VM
 
-Run `pvm` to see the various options and arguments to properly run the VM. Make sure the program is installed properly. Generally speaking, `pvm -e [file]` runs a bytecode file.
+Run `pvm` to see the various options and arguments to properly run the VM. Make sure the program is installed properly. For quick bytecode execution, simply run `pvm [file]`.
 
 ## Notable Changes
 
