@@ -9,10 +9,10 @@ These following instructions will guide you on how to install Pine Virtual Machi
 <table>
     <thead>
         <tr>
-            <th style="text-align:center;">**Operating System**</th>
-            <th style="text-align:center;">**Architecture**</th>
-            <th style="text-align:center;">**Status**</th>
-            <th style="text-align:center;">**Note**</th>
+            <th style="text-align:center;">Operating System</th>
+            <th style="text-align:center;">Architecture</th>
+            <th style="text-align:center;">Status</th>
+            <th style="text-align:center;">Note</th>
         </tr>
     </thread>
     <tbody>
