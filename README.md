@@ -60,6 +60,8 @@ Before installing the project, please have the following programs installed:
 
 Once the project is downloaded, run `make` and follow the instructions printed. This command builds the executable and install an alias on `/usr/local/bin`.
 
+### Uninstalling
+
 To uninstall, simply run `make uninstall` to delete the executable's alias on `/usr/local/bin`.
 
 ## Deployment
