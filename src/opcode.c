@@ -334,13 +334,19 @@ opcode_t PUT(VM *vm, va_t tid) /* {0:OPCODE} {1:STACK_ADDRESS} {2:REGISTER_ADDRE
     return thread->controlunit.instrreg;
 }
 
-opcode_t PEEK(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS} */
+opcode_t PEEK(VM *vm, va_t tid) /* {0:OPCODE} {1:STACK_ADDRESS} {2:REGISTER_ADDRESS} */
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg;
 
+    /* Fetch STACK_ADDRESS (8 bytes) */
+    stack_va = fetch_code_8BYTES(vm, tid);
+
+    /* Fetch register */
     reg = fetch_reg(vm, tid);
-    *reg = stk_Peek(thread->stack);
+
+    /* Get data from stack to register */
+    *reg = thread->stack.primdata_arr[stack_va];
 
     return thread->controlunit.instrreg;
 }
