@@ -148,7 +148,7 @@ opcode_t HLT(VM *vm, va_t tid)
  * REGISTER MANIPULATION
  */
 
-opcode_t LOAD(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS} {2:TYPE} {3:RAW_DATA} */
+opcode_t LOAD(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg, prot;
@@ -210,7 +210,7 @@ opcode_t LOAD(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS} {2:TYPE} {3:R
     return thread->controlunit.instrreg;
 }
 
-opcode_t MOVE(VM *vm, va_t tid) /* {0:OPCODE} {1:SOURCE_ADDRESS} {2:DESTINATION_ADDRESS} */
+opcode_t MOVE(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *src, *dest, prot;
@@ -229,7 +229,7 @@ opcode_t MOVE(VM *vm, va_t tid) /* {0:OPCODE} {1:SOURCE_ADDRESS} {2:DESTINATION_
     return thread->controlunit.instrreg;
 }
 
-opcode_t CAST(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS} {2:TYPE} */
+opcode_t CAST(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg, new;
@@ -296,7 +296,7 @@ opcode_t CAST(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS} {2:TYPE} */
  *STACK INSTRUCTIONS
  */
 
-opcode_t PUSH(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS} */
+opcode_t PUSH(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *data;
@@ -307,7 +307,7 @@ opcode_t PUSH(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS} */
     return thread->controlunit.instrreg;
 }
 
-opcode_t POP(VM *vm, va_t tid) /* {0:OPCODE} */
+opcode_t POP(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
 
@@ -316,7 +316,7 @@ opcode_t POP(VM *vm, va_t tid) /* {0:OPCODE} */
     return thread->controlunit.instrreg;
 }
 
-opcode_t PUT(VM *vm, va_t tid) /* {0:OPCODE} {1:STACK_ADDRESS} {2:REGISTER_ADDRESS} */
+opcode_t PUT(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t stack_va;
@@ -334,7 +334,7 @@ opcode_t PUT(VM *vm, va_t tid) /* {0:OPCODE} {1:STACK_ADDRESS} {2:REGISTER_ADDRE
     return thread->controlunit.instrreg;
 }
 
-opcode_t PEEK(VM *vm, va_t tid) /* {0:OPCODE} {1:STACK_ADDRESS} {2:REGISTER_ADDRESS} */
+opcode_t PEEK(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg;
@@ -356,7 +356,7 @@ opcode_t PEEK(VM *vm, va_t tid) /* {0:OPCODE} {1:STACK_ADDRESS} {2:REGISTER_ADDR
  *HEAP INSTRUCTIONS
  */
 
-opcode_t MALLOC(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:SIZE} */
+opcode_t MALLOC(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t heap_va;
@@ -374,7 +374,7 @@ opcode_t MALLOC(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:SIZE} */
     return thread->controlunit.instrreg;
 }
 
-opcode_t CALLOC(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:SIZE} */
+opcode_t CALLOC(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t heap_va;
@@ -392,7 +392,7 @@ opcode_t CALLOC(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:SIZE} */
     return thread->controlunit.instrreg;
 }
 
-opcode_t REALLOC(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:SIZE} */
+opcode_t REALLOC(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t heap_va;
@@ -410,7 +410,7 @@ opcode_t REALLOC(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:SIZE} */
     return thread->controlunit.instrreg;
 }
 
-opcode_t FREE(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} */
+opcode_t FREE(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t heap_va;
@@ -424,7 +424,7 @@ opcode_t FREE(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} */
     return thread->controlunit.instrreg;
 }
 
-opcode_t STORE(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:OFFSET_ADDRESS} {3:REGISTER_ADDRESS} */
+opcode_t STORE(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t heap_va, offset;
@@ -445,7 +445,7 @@ opcode_t STORE(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:OFFSET_ADDRES
     return thread->controlunit.instrreg;
 }
 
-opcode_t GET(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:OFFSET_ADDRESS} {3:REGISTER_ADDRESS} */
+opcode_t GET(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t heap_va, offset;
@@ -474,13 +474,13 @@ opcode_t GET(VM *vm, va_t tid) /* {0:OPCODE} {1:HEAP_ADDRESS} {2:OFFSET_ADDRESS}
  *staticIC SEGMENT INSTRUCTIONS
  */
 
-opcode_t ALLOC_STATIC(VM *vm, va_t tid) /* {0:OPCODE} {1:STATIC_ADDRESS} {2:SIZE} */
+opcode_t ALLOC_STATIC(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t va;
     size_t size;
 
-    /* Fetch staticIC_ADDRESS (8 bytes) */
+    /* Fetch STATIC_ADDRESS (8 bytes) */
     va = fetch_code_8BYTES(vm, tid);
 
     /* Fetch SIZE (8 bytes) */
@@ -492,13 +492,13 @@ opcode_t ALLOC_STATIC(VM *vm, va_t tid) /* {0:OPCODE} {1:STATIC_ADDRESS} {2:SIZE
     return thread->controlunit.instrreg;
 }
 
-opcode_t STORE_STATIC(VM *vm, va_t tid) /* {0:OPCODE} {1:STATIC_ADDRESS} {2:OFFSET_ADDRESS} {3:REGISTER_ADDRESS} */
+opcode_t STORE_STATIC(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t va, offset;
     PrimitiveData *reg;
 
-    /* Fetch HEAP_ADDRESS (8 bytes) */
+    /* Fetch STATIC_ADDRESS (8 bytes) */
     va = fetch_code_8BYTES(vm, tid);
 
     /* Fetch OFFSET_ADDRESS (8 bytes) */
@@ -507,13 +507,13 @@ opcode_t STORE_STATIC(VM *vm, va_t tid) /* {0:OPCODE} {1:STATIC_ADDRESS} {2:OFFS
     /* Fetch register */
     reg = fetch_reg(vm, tid);
 
-    /* Store data in given register to the address at staticic segment */
+    /* Store data in given register to the address at static segment */
     vm->staticseg.var_pool[va].primdata_arr[offset] = *reg;
 
     return thread->controlunit.instrreg;
 }
 
-opcode_t GET_STATIC(VM *vm, va_t tid)  /* {0:OPCODE} {1:STATIC_ADDRESS} {2:OFFSET_ADDRESS} {3:REGISTER_ADDRESS} */
+opcode_t GET_STATIC(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t va, offset;
@@ -525,12 +525,11 @@ opcode_t GET_STATIC(VM *vm, va_t tid)  /* {0:OPCODE} {1:STATIC_ADDRESS} {2:OFFSE
     /* Fetch OFFSET_ADDRESS (8 bytes) */
     offset = fetch_code_8BYTES(vm, tid);
 
-    prot = vm->staticseg.var_pool[va].primdata_arr[offset];
-
     /* Fetch register */
     reg = fetch_reg(vm, tid);
 
     /* Get static data in static segment of given address to register */
+    prot = vm->staticseg.var_pool[va].primdata_arr[offset];
     *reg = prot;
 
     return thread->controlunit.instrreg;
@@ -542,7 +541,7 @@ opcode_t GET_STATIC(VM *vm, va_t tid)  /* {0:OPCODE} {1:STATIC_ADDRESS} {2:OFFSE
  *FLOW INSTRUCTIONS
  */
 
-opcode_t JUMP(VM *vm, va_t tid) /* {0:OPCODE} {1:CODESEG_INDEX} */
+opcode_t JUMP(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t index_address;
@@ -558,7 +557,7 @@ opcode_t JUMP(VM *vm, va_t tid) /* {0:OPCODE} {1:CODESEG_INDEX} */
     return core_Cycle(vm, tid);
 }
 
-opcode_t JUMP_IF_TRUE(VM *vm, va_t tid) /* {0:OPCODE} {1:CODESEG_INDEX} */
+opcode_t JUMP_IF_TRUE(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t index_address;
@@ -577,7 +576,7 @@ opcode_t JUMP_IF_TRUE(VM *vm, va_t tid) /* {0:OPCODE} {1:CODESEG_INDEX} */
     return thread->controlunit.instrreg;
 }
 
-opcode_t JUMP_IF_FALSE(VM *vm, va_t tid) /* {0:OPCODE} {1:CODESEG_INDEX} */
+opcode_t JUMP_IF_FALSE(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t index_address;
@@ -617,7 +616,7 @@ opcode_t JUMP_IF_FALSE(VM *vm, va_t tid) /* {0:OPCODE} {1:CODESEG_INDEX} */
 #define TYPE_UNSIGNED (UI8 | UI16 | UI32 | UI64)
 #define TYPE_SIGNED   ( I8 |  I16 |  I32 |  I64)
 
-opcode_t ADD(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t ADD(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -702,7 +701,7 @@ opcode_t ADD(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_
     return thread->controlunit.instrreg;
 }
 
-opcode_t SUB(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t SUB(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -788,7 +787,7 @@ opcode_t SUB(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_
     return thread->controlunit.instrreg;
 }
 
-opcode_t MUL(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t MUL(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -874,7 +873,7 @@ opcode_t MUL(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_
     return thread->controlunit.instrreg;
 }
 
-opcode_t DIV(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t DIV(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -960,7 +959,7 @@ opcode_t DIV(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_
     return thread->controlunit.instrreg;
 }
 
-opcode_t MOD(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t MOD(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1038,7 +1037,7 @@ opcode_t MOD(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_
     return thread->controlunit.instrreg;
 }
 
-opcode_t AND(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t AND(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1088,7 +1087,7 @@ opcode_t AND(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_
     return thread->controlunit.instrreg;
 }
 
-opcode_t OR(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t OR(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1138,7 +1137,7 @@ opcode_t OR(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_A
     return thread->controlunit.instrreg;
 }
 
-opcode_t XOR(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t XOR(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1188,7 +1187,7 @@ opcode_t XOR(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_
     return thread->controlunit.instrreg;
 }
 
-opcode_t NOT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} */
+opcode_t NOT(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, op_res;
@@ -1228,7 +1227,7 @@ opcode_t NOT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} */
     return thread->controlunit.instrreg;
 }
 
-opcode_t LSHIFT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t LSHIFT(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
 
@@ -1279,7 +1278,7 @@ opcode_t LSHIFT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGIST
     return thread->controlunit.instrreg;
 }
 
-opcode_t RSHIFT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t RSHIFT(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
 
@@ -1336,7 +1335,7 @@ opcode_t RSHIFT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGIST
  *RELATIONAL & LOGICAL OPERATIONS
  */
 
-opcode_t LESS(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t LESS(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1354,7 +1353,7 @@ opcode_t LESS(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER
     return thread->controlunit.instrreg;
 }
 
-opcode_t LESS_EQ(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t LESS_EQ(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1372,7 +1371,7 @@ opcode_t LESS_EQ(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGIS
     return thread->controlunit.instrreg;
 }
 
-opcode_t GREAT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t GREAT(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1390,7 +1389,7 @@ opcode_t GREAT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTE
     return thread->controlunit.instrreg;
 }
 
-opcode_t GREAT_EQ(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t GREAT_EQ(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1408,7 +1407,7 @@ opcode_t GREAT_EQ(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGI
     return thread->controlunit.instrreg;
 }
 
-opcode_t EQUAL(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t EQUAL(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1426,7 +1425,7 @@ opcode_t EQUAL(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTE
     return thread->controlunit.instrreg;
 }
 
-opcode_t N_EQUAL(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t N_EQUAL(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1444,7 +1443,7 @@ opcode_t N_EQUAL(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGIS
     return thread->controlunit.instrreg;
 }
 
-opcode_t LOG_AND(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t LOG_AND(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1462,7 +1461,7 @@ opcode_t LOG_AND(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGIS
     return thread->controlunit.instrreg;
 }
 
-opcode_t LOG_OR(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGISTER_ADDRESS_1} */
+opcode_t LOG_OR(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, *reg1, op_res;
@@ -1480,7 +1479,7 @@ opcode_t LOG_OR(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} {2:REGIST
     return thread->controlunit.instrreg;
 }
 
-opcode_t LOG_NOT(VM *vm, va_t tid) /* {0:OPCODE} {1:REGISTER_ADDRESS_0} */
+opcode_t LOG_NOT(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     PrimitiveData *reg0, op_res;
