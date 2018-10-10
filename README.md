@@ -52,9 +52,9 @@ These following instructions will guide you on how to install Pine Virtual Machi
 ### Prerequisites
 
 Before installing the project, please have the following programs installed:
-* git
-* gcc
-* GNU make
+* [git](https://git-scm.com/)
+* [gcc](https://gcc.gnu.org/)
+* [Make](https://www.gnu.org/software/make/)
 
 ### Installing
 
