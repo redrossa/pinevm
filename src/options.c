@@ -13,6 +13,11 @@ int opt_Execute(char * arg)
     return retcode;
 }
 
+
+/*
+ * TODO: Add more option outputs for specific OSes. Perhaps add a centralised
+ *       versioning output system as well.
+ */
 int opt_Version(void)
 {
     printf
