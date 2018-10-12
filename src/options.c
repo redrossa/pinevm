@@ -1,14 +1,14 @@
 #include "../include/options.h"
 #include <string.h>
 
-int opt_Execute(char * arg)
+int opt_execute(char * arg)
 {
     int retcode;
     VM vm;
 
-    vm = pvm_Initialise(arg);
-    retcode = pvm_Run(&vm);
-    pvm_Finalise(&vm);
+    vm = pvm_initialise(arg);
+    retcode = pvm_run(&vm);
+    pvm_finalise(&vm);
 
     return retcode;
 }
@@ -18,7 +18,7 @@ int opt_Execute(char * arg)
  * TODO: Add more option outputs for specific OSes. Perhaps add a centralised
  *       versioning output system as well.
  */
-int opt_Version(void)
+int opt_version(void)
 {
     printf
     (
@@ -28,7 +28,7 @@ int opt_Version(void)
     return 0;
 }
 
-int opt_Help(void)
+int opt_help(void)
 {
     printf
     (

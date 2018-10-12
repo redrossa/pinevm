@@ -12,7 +12,7 @@
 
 #include "../include/staticseg.h"
 
-int ssg_Initialise(StaticSeg *staticseg, size_t size)
+int ssg_initialise(StaticSeg *staticseg, size_t size)
 {
     *staticseg = (StaticSeg) {.size = size, .var_pool = malloc(sizeof(PrimitiveData) * size)};
 
@@ -20,19 +20,19 @@ int ssg_Initialise(StaticSeg *staticseg, size_t size)
         staticseg->var_pool[i] = (StaticData) {.size = 0, .primdata_arr = NULL};
 
     if (staticseg->var_pool == NULL)
-        return pvm_ReportError(STATICSEG_H, __FUNCTION__, "Allocation failed");
+        return pvm_reporterror(STATICSEG_H, __FUNCTION__, "Allocation failed");
     return 0;
 }
 
-int ssg_Allocate(StaticSeg *staticseg, va_t va, size_t size)
+int ssg_allocate(StaticSeg *staticseg, va_t va, size_t size)
 {
     staticseg->var_pool[va] = (StaticData) {.size = size, .primdata_arr = malloc(sizeof(PrimitiveData) * size)};
     if (staticseg->var_pool[va].primdata_arr == NULL)
-        return pvm_ReportError(STATICSEG_H, __FUNCTION__, "Allocation failed");
+        return pvm_reporterror(STATICSEG_H, __FUNCTION__, "Allocation failed");
     return 0;
 }
 
-int ssg_Finalise(StaticSeg *staticseg)
+int ssg_finalise(StaticSeg *staticseg)
 {
     if (staticseg->var_pool != NULL)
     {

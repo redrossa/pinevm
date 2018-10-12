@@ -11,7 +11,7 @@
 #include "../include/thread.h"
 #include "../include/vm.h"
 
-int thr_Spawn(VM *vm, va_t instrpointreg)
+int thr_spawn(VM *vm, va_t instrpointreg)
 {
     va_t i;
     Thread *tmp;
@@ -31,13 +31,13 @@ int thr_Spawn(VM *vm, va_t instrpointreg)
     return 0;
 }
 
-int thr_Kill(VM *vm, va_t tid)
+int thr_kill(VM *vm, va_t tid)
 {
     Thread *tmp = &vm->core.thread_pool[tid];
 
     /* Check if thread is dead already */
     if (tmp->flag & THR_DEAD)
-        return pvm_ReportError(THREAD_H, __FUNCTION__, NULL);
+        return pvm_reporterror(THREAD_H, __FUNCTION__, NULL);
 
     if (tmp->flag & THR_RUN)
         tmp->flag = THR_DEAD;
@@ -47,12 +47,12 @@ int thr_Kill(VM *vm, va_t tid)
     return 0;
 }
 
-int thr_Run(VM *vm, va_t tid)
+int thr_run(VM *vm, va_t tid)
 {
     Thread *tmp = &vm->core.thread_pool[tid];
 
     if (tmp->flag & (THR_DEAD) || ((tmp->flag & THR_SLEEP) && tmp->countdown > 0))
-        return core_ManageThread(vm, tid);
+        return core_managethread(vm, tid);
 
     vm->core.running_thread = tid;
     tmp->flag = THR_RUN;
@@ -61,10 +61,10 @@ int thr_Run(VM *vm, va_t tid)
 
     opc_Execute[tmp->controlunit.instrreg](vm, tid); /* Actual VM operation */
 
-    return core_Cycle(vm, tid);
+    return core_cycle(vm, tid);
 }
 
-int thr_Sleep(VM *vm, va_t tid, vmclock_t cycle)
+int thr_sleep(VM *vm, va_t tid, vmclock_t cycle)
 {
     Thread *tmp = &vm->core.thread_pool[tid];
     tmp->flag = THR_SLEEP;

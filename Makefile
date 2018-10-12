@@ -28,7 +28,6 @@ uninstall:
 test:
 	@gcc test/binfile.c -o binfile
 
-# Uninstall and deletes VM executable in this directory
+# Deletes VM executable in this directory
 clean:
-	@make uninstall
 	@rm $(EXE)

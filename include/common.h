@@ -36,8 +36,8 @@ typedef struct PineVMData
     };
 } PrimitiveData;
 
-extern int pvm_Handle(int, const char *, int);
-extern int pvm_ReportError(int, const char *, const char *);
+extern int pvm_handle(int, const char *, int);
+extern int pvm_reporterror(int, const char *, const char *);
 
 #define VA_GETSIZE(vadr) ((vadr) + 1)
 #define VA_GETVADR(size) ((size) - 1)

@@ -11,22 +11,22 @@
 
 #include "../include/heap.h"
 
-int heap_Initialise(Heap *heap, size_t size)
+int heap_initialise(Heap *heap, size_t size)
 {
     *heap = (Heap) {.freeframes = size, .totalblocks = 0, .size = size, .var_pool = malloc(sizeof(HeapFrame) * size)};
 
     if (heap->var_pool == NULL)
-        return pvm_ReportError(HEAP_H, __FUNCTION__, "Allocation Failed");
+        return pvm_reporterror(HEAP_H, __FUNCTION__, "Allocation Failed");
 
     for (va_t i = 0; i < size; i++)
         heap->var_pool[i] = (HeapFrame) {.free = true, .framesize = 0, .block = NULL};
 
     /* Allocate for 'null' */
-    heap_Malloc(heap, 0x0, 1);
+    heap_malloc(heap, 0x0, 1);
     return 0;
 }
 
-int heap_Finalise(Heap *heap)
+int heap_finalise(Heap *heap)
 {
     if (heap->var_pool != NULL)
     {
@@ -35,7 +35,7 @@ int heap_Finalise(Heap *heap)
         /* Free any allocated frames first */
         for (va_t i = 0x0; i < heap->size; i++)
             if (heap->var_pool[i].free == false)
-                heap_Free(heap, i);
+                heap_free(heap, i);
 
         /* Finaly free the frame var_pool */
         free(heap->var_pool);
@@ -45,10 +45,10 @@ int heap_Finalise(Heap *heap)
     return 0;
 }
 
-int heap_Malloc(Heap *heap, va_t va, size_t size)
+int heap_malloc(Heap *heap, va_t va, size_t size)
 {
     if (heap->var_pool[va].free == false || heap->freeframes == 0)
-        return pvm_ReportError(HEAP_H, __FUNCTION__, "Heap Overflow");
+        return pvm_reporterror(HEAP_H, __FUNCTION__, "Heap Overflow");
 
     heap->freeframes--;
     heap->totalblocks += size;
@@ -58,15 +58,15 @@ int heap_Malloc(Heap *heap, va_t va, size_t size)
     heap->var_pool[va].block = malloc(sizeof(PrimitiveData) * size);
 
     if (heap->var_pool[va].block == NULL)
-        return pvm_ReportError(HEAP_H, __FUNCTION__, NULL);
+        return pvm_reporterror(HEAP_H, __FUNCTION__, NULL);
 
     return 0;
 }
 
-int heap_Calloc(Heap *heap, va_t va, size_t size)
+int heap_calloc(Heap *heap, va_t va, size_t size)
 {
     if (heap->var_pool[va].free == false || heap->freeframes == 0)
-        return pvm_ReportError(HEAP_H, __FUNCTION__, "Heap Overflow");
+        return pvm_reporterror(HEAP_H, __FUNCTION__, "Heap Overflow");
 
     heap->freeframes--;
     heap->totalblocks += size;
@@ -76,15 +76,15 @@ int heap_Calloc(Heap *heap, va_t va, size_t size)
     heap->var_pool[va].block = calloc(size, sizeof(PrimitiveData));
 
     if (heap->var_pool[va].block == NULL)
-        return pvm_ReportError(HEAP_H, __FUNCTION__, NULL);
+        return pvm_reporterror(HEAP_H, __FUNCTION__, NULL);
 
     return 0;
 }
 
-int heap_Realloc(Heap *heap, va_t va, size_t size)
+int heap_realloc(Heap *heap, va_t va, size_t size)
 {
     if (heap->var_pool[va].free == true)
-        return pvm_ReportError(HEAP_H, __FUNCTION__, "Target unallocated");
+        return pvm_reporterror(HEAP_H, __FUNCTION__, "Target unallocated");
 
     PrimitiveData * tmp;
 
@@ -93,16 +93,16 @@ int heap_Realloc(Heap *heap, va_t va, size_t size)
 
     tmp = realloc(heap->var_pool[va].block, size);
     if (tmp == NULL)
-        return pvm_ReportError(HEAP_H, __FUNCTION__, "Allocation Failed");
+        return pvm_reporterror(HEAP_H, __FUNCTION__, "Allocation Failed");
 
     heap->var_pool[va].block = tmp;
     return 0;
 }
 
-int heap_Free(Heap *heap, va_t va)
+int heap_free(Heap *heap, va_t va)
 {
     if (heap->var_pool[va].free == true)
-        return pvm_ReportError(HEAP_H, __FUNCTION__, "Target unallocated");
+        return pvm_reporterror(HEAP_H, __FUNCTION__, "Target unallocated");
 
     heap->freeframes++;
     heap->totalblocks -= heap->var_pool[va].framesize;

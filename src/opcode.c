@@ -126,7 +126,7 @@ opcode_t NOP(VM *vm, va_t tid)
 
 opcode_t HLT(VM *vm, va_t tid)
 {
-    thr_Kill(vm, tid);
+    thr_kill(vm, tid);
     return vm->core.thread_pool[tid].controlunit.instrreg;
 }
 
@@ -302,7 +302,7 @@ opcode_t PUSH(VM *vm, va_t tid)
     PrimitiveData *data;
 
     data = fetch_reg(vm, tid); /* fetch DATA to be pushed to stack */
-    stk_Push(&thread->stack, *data);
+    stk_push(&thread->stack, *data);
 
     return thread->controlunit.instrreg;
 }
@@ -311,7 +311,7 @@ opcode_t POP(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
 
-    stk_Pop(&thread->stack);
+    stk_pop(&thread->stack);
 
     return thread->controlunit.instrreg;
 }
@@ -337,6 +337,7 @@ opcode_t PUT(VM *vm, va_t tid)
 opcode_t PEEK(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
+    va_t stack_va;
     PrimitiveData *reg;
 
     /* Fetch STACK_ADDRESS (8 bytes) */
@@ -369,7 +370,7 @@ opcode_t MALLOC(VM *vm, va_t tid)
     size = fetch_code_8BYTES(vm, tid);
 
     /* Malloc VM heap at address heap_va  */
-    heap_Malloc(&vm->heap, heap_va, size);
+    heap_malloc(&vm->heap, heap_va, size);
 
     return thread->controlunit.instrreg;
 }
@@ -387,7 +388,7 @@ opcode_t CALLOC(VM *vm, va_t tid)
     size = fetch_code_8BYTES(vm, tid);
 
     /* Calloc VM heap at address heap_va  */
-    heap_Calloc(&vm->heap, heap_va, size);
+    heap_calloc(&vm->heap, heap_va, size);
 
     return thread->controlunit.instrreg;
 }
@@ -405,7 +406,7 @@ opcode_t REALLOC(VM *vm, va_t tid)
     size = fetch_code_8BYTES(vm, tid);
 
     /* Malloc VM heap at address heap_va */
-    heap_Realloc(&vm->heap, heap_va, size);
+    heap_realloc(&vm->heap, heap_va, size);
 
     return thread->controlunit.instrreg;
 }
@@ -419,7 +420,7 @@ opcode_t FREE(VM *vm, va_t tid)
     heap_va = fetch_code_8BYTES(vm, tid);
 
     /* Free VM heap at address heap_va */
-    heap_Free(&vm->heap, heap_va);
+    heap_free(&vm->heap, heap_va);
 
     return thread->controlunit.instrreg;
 }
@@ -487,7 +488,7 @@ opcode_t ALLOC_STATIC(VM *vm, va_t tid)
     size = fetch_code_8BYTES(vm, tid);
 
     /* Allocate in staticic segment */
-    ssg_Allocate(&vm->staticseg, va, size);
+    ssg_allocate(&vm->staticseg, va, size);
 
     return thread->controlunit.instrreg;
 }
@@ -554,7 +555,7 @@ opcode_t JUMP(VM *vm, va_t tid)
     thread->controlunit.instrreg = vm->codeseg.content[thread->controlunit.instrpointreg = index_address];
 
     /* End cycle early */
-    return core_Cycle(vm, tid);
+    return core_cycle(vm, tid);
 }
 
 opcode_t JUMP_IF_TRUE(VM *vm, va_t tid)
@@ -571,7 +572,7 @@ opcode_t JUMP_IF_TRUE(VM *vm, va_t tid)
         thread->flag = THR_RUN;
         thread->controlunit.progcountreg++;
         thread->controlunit.instrreg = vm->codeseg.content[thread->controlunit.instrpointreg = index_address];
-        return core_Cycle(vm, tid);
+        return core_cycle(vm, tid);
     }
     return thread->controlunit.instrreg;
 }
@@ -590,7 +591,7 @@ opcode_t JUMP_IF_FALSE(VM *vm, va_t tid)
         thread->flag = THR_RUN;
         thread->controlunit.progcountreg++;
         thread->controlunit.instrreg = vm->codeseg.content[thread->controlunit.instrpointreg = index_address];
-        return core_Cycle(vm, tid);
+        return core_cycle(vm, tid);
     }
     return thread->controlunit.instrreg;
 }

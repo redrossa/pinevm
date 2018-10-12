@@ -37,7 +37,7 @@ typedef struct PineVMCodeSegment
 } CodeSeg;
 
 /*
- * Function : csg_Initialise
+ * Function : csg_initialise
  * ------------------------
  * Initialises code segment. The bytecode File path is stored in 'filepath' and
  * opens the file. Calculates the file size and chops them into bytes and store
@@ -47,16 +47,16 @@ typedef struct PineVMCodeSegment
  * @param   : Bytecode file path
  * @return  : Error code
  */
-int csg_Initialise(CodeSeg *, const char *);
+int csg_initialise(CodeSeg *, const char *);
 
 /*
- * Function : csg_Finalise
+ * Function : csg_finalise
  * ------------------------
  * Finalises code segment by freeing 'content'.
  *
  * @param   : Pointer to CodeSeg instance
  * @return  : Error code
  */
-int csg_Finalise(CodeSeg *);
+int csg_finalise(CodeSeg *);
 
 #endif /* CODESEG_H */

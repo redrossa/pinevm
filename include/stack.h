@@ -29,7 +29,7 @@ typedef struct PineVMStack
 } Stack;
 
 /*
- * Function : stk_Push
+ * Function : stk_push
  * -------------------
  * Inserts PrimitiveData input into stack. Increments stack pointer.
  *
@@ -37,26 +37,26 @@ typedef struct PineVMStack
  * @param   : PrimitiveData instance
  * @return  : Updated stack pointer
  */
-stackva_t stk_Push(Stack *, PrimitiveData);
+stackva_t stk_push(Stack *, PrimitiveData);
 
 /*
- * Function : stk_Pop
+ * Function : stk_pop
  * -------------------
  * Frees PrimitiveData that the stack pointer points to.
  *
  * @param   : Pointer to Stack instance
  * @return  : Updated stack pointer
  */
-stackva_t stk_Pop(Stack *);
+stackva_t stk_pop(Stack *);
 
 /*
- * Function : stk_Peek
+ * Function : stk_peek
  * -------------------
  * Returns a copy of PrimitiveData that the stack pointer points to.
  *
  * @param   : Stack instance
  * @return  : PrimitiveData instance
  */
-PrimitiveData      stk_Peek(Stack); /* Return TOS */
+PrimitiveData stk_peek(Stack); /* Return TOS */
 
 #endif /* STACK_H */

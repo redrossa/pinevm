@@ -34,37 +34,37 @@ typedef struct PineVMScheduler
 } Scheduler;
 
 /*
- * Function : sch_Initialise
+ * Function : sch_initialise
  * ------------------------
  * Initialises scheduler.
  *
  * @param   : Pointer to Scheduler instance
  * @return  : Error code
  */
-int sch_Initialise(Scheduler *);
+int sch_initialise(Scheduler *);
 
 /*
- * Function : sch_Pause
+ * Function : sch_pause
  * -------------------
  * Turn scheduler off, cannot increment clock when off.
  *
  * @param   : Pointer to Scheduler instance
  * @return  : Error code
  */
-int sch_Pause(Scheduler *);
+int sch_pause(Scheduler *);
 
 /*
- * Function : sch_Resume
+ * Function : sch_resume
  * --------------------
  * Turn schedueler when paused.
  *
  * @param   : Pointer to Scheduler instance
  * @return  : Error code
  */
-int sch_Resume(Scheduler *);
+int sch_resume(Scheduler *);
 
 /*
- * Function : sch_Cycle
+ * Function : sch_cycle
  * --------------------
  * A cycle is when a thread has finished performing an operation (including its
  * safety protocol). This increaments scheduler clock.
@@ -72,20 +72,20 @@ int sch_Resume(Scheduler *);
  * @param   : Pointer to Scheduler instance
  * @return  : Error code
  */
-int sch_Cycle(Scheduler *);
+int sch_cycle(Scheduler *);
 
 /*
- * Function : sch_Cycle
+ * Function : sch_reset
  * --------------------
  * Resets the scheduler clock back to 0.
  *
  * @param   : Pointer to Scheduler instance
  * @return  : Error code
  */
-int sch_Reset(Scheduler *);
+int sch_reset(Scheduler *);
 
 /*
- * Function: sch_Cycle
+ * Function: sch_stamp
  * --------------------
  * Returns scheduler clock to be stored elsewhere in the thread possibly as a
  * data variable.
@@ -93,7 +93,7 @@ int sch_Reset(Scheduler *);
  * @param   : Pointer to Scheduler instance
  * @return  : Scheduler clock
  */
-vmclock_t sch_Stamp(Scheduler *);
+vmclock_t sch_stamp(Scheduler *);
 
 /* Scheduler flags */
 #define SCH_OFF    0

@@ -53,7 +53,7 @@ typedef struct PineVM
 } VM;
 
 /*
- * Function : pvm_Initialise
+ * Function : pvm_initialise
  * -------------------------
  * Creates a VM instance and initialises its members.
  *
@@ -61,10 +61,10 @@ typedef struct PineVM
  * @return  : Initialised VM
  *
  */
-VM pvm_Initialise(const char *);
+VM pvm_initialise(const char *);
 
 /*
- * Function : pvm_Finalise
+ * Function : pvm_finalise
  * -----------------------
  * Finalise a VM instance's members, free any dynamically allocated objects.
  * Reusing a VM instance that has been passed to this function results in an
@@ -73,22 +73,22 @@ VM pvm_Initialise(const char *);
  * @param   : Pointer to VM instance
  * @return  : Error code
  */
-int pvm_Finalise(VM *);
+int pvm_finalise(VM *);
 
 /*
- * Function : pvm_Run
+ * Function : pvm_run
  * ------------------
  * Read bytecode stored in the code segment and perform operations. Once all
- * operations from the bytecodes are performed, call pvm_Finalise! Running a VM
+ * operations from the bytecodes are performed, call pvm_finalise! Running a VM
  * twice results in an undefined behaviour
 
  * @param   : Pointer to VM instance
  * @return  : Error code
  */
-int pvm_Run(VM *);
+int pvm_run(VM *);
 
 /*
- * Function : pvm_Handle
+ * Function : pvm_handle
  * ---------------------
  * Configures PineVMHandler.
  *
@@ -101,10 +101,10 @@ int pvm_Run(VM *);
  * @return  : Calls pvm_Dispatch
  * @deprecated
  */
-int pvm_Handle(int, const char *, int);
+int pvm_handle(int, const char *, int);
 
 /*
- * Function : pvm_Dispatch
+ * Function : pvm_dispatch
  * -----------------------
  * Handles error codes passed by the VM's internal functions. Determines if the
  * program has to force exit or note.
@@ -116,8 +116,8 @@ int pvm_Handle(int, const char *, int);
  * @return  : Error code
  * @deprecated
  */
-int pvm_Dispatch(int);
+int pvm_dispatch(int);
 
-int pvm_ReportError(int, const char *, const char *);
+int pvm_reporterror(int, const char *, const char *);
 
 #endif /* VM_H */

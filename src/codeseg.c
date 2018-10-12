@@ -9,14 +9,14 @@
 
 #include "../include/codeseg.h"
 
-int csg_Initialise(CodeSeg * codeseg, const char * path)
+int csg_initialise(CodeSeg * codeseg, const char * path)
 {
     size_t size;
     FILE * fp;
 
     fp = fopen(path, "rb");
     if (fp == NULL)
-        return pvm_ReportError(CODESEG_H, __FUNCTION__, "File not found");
+        return pvm_reporterror(CODESEG_H, __FUNCTION__, "File not found");
 
     fseek(fp, 0, SEEK_END);
     size = ftell(fp);
@@ -31,7 +31,7 @@ int csg_Initialise(CodeSeg * codeseg, const char * path)
     return 0;
 }
 
-int csg_Finalise(CodeSeg * codeseg)
+int csg_finalise(CodeSeg * codeseg)
 {
     if (codeseg->content != NULL)
         free(codeseg->content);

@@ -1,5 +1,5 @@
 #include "vm.h"
 
-int opt_Execute(char *);
-int opt_Version(void);
-int opt_Help(void);
+int opt_execute(char *);
+int opt_version(void);
+int opt_help(void);

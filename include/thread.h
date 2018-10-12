@@ -64,7 +64,7 @@ typedef struct _PineVMThread
 } Thread;
 
 /*
- * Function : thr_Spawn
+ * Function : thr_spawn
  * --------------------
  * Spawns a thread and initialises its members.
  *
@@ -73,10 +73,10 @@ typedef struct _PineVMThread
  *            first operation
  * @return  : Error code
  */
-int thr_Spawn(VM *, va_t);
+int thr_spawn(VM *, va_t);
 
 /*
- * Function : thr_Kill
+ * Function : thr_kill
  * --------------------
  * Kills a thread and frees any dynamically allocated members.
  *
@@ -84,10 +84,10 @@ int thr_Spawn(VM *, va_t);
  * @param   : Thread ID
  * @return  : Error code
  */
-int thr_Kill(VM *, va_t);
+int thr_kill(VM *, va_t);
 
 /*
- * Function : thr_Run
+ * Function : thr_run
  * --------------------
  * Lets thread perform a cycle.
  *
@@ -95,10 +95,10 @@ int thr_Kill(VM *, va_t);
  * @param   : Address to code segment for the thread's first operation
  * @return  : Calls core_Cycle
  */
-int thr_Run(VM *, va_t);
+int thr_run(VM *, va_t);
 
 /*
- * Function : thr_Spawn
+ * Function : thr_sleep
  * --------------------
  * Sleeps a thread.
  *
@@ -107,7 +107,7 @@ int thr_Run(VM *, va_t);
  * @param   : Clocks for thread's countdown
  * @return  : Error code
  */
-int thr_Sleep(VM *, va_t, vmclock_t);
+int thr_sleep(VM *, va_t, vmclock_t);
 
 #define THR_UNINIT  0 /* Thread uninitialised */
 #define THR_DEAD    1 /* When a thread is killed */

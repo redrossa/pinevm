@@ -46,7 +46,7 @@ typedef struct PineVMHeap
 } Heap;
 
 /*
- * Function : heap_Initialise
+ * Function : heap_initialise
  * --------------------------
  * Initialises heap. Allocates pool.
  *
@@ -54,20 +54,20 @@ typedef struct PineVMHeap
  * @param   : Size of pool to allocate
  * @return  : Error code
  */
-int heap_Initialise(Heap *, size_t size);
+int heap_initialise(Heap *, size_t size);
 
 /*
- * Function : heap_Finalise
+ * Function : heap_finalise
  * ------------------------
  * Finalises Heap. Frees unfreed blocks and finally the whole pool.
  *
  * @param   : Pointer to Heap instance
  * @return  : Error code
  */
-int heap_Finalise(Heap *);
+int heap_finalise(Heap *);
 
 /*
- * Function : heap_Malloc
+ * Function : heap_malloc
  * ----------------------
  * Allocate a frame in the pool with a given amount blocks.
  *
@@ -76,10 +76,10 @@ int heap_Finalise(Heap *);
  * @param   : Size of frame
  * @return  : Error code
  */
-int heap_Malloc(Heap *, va_t, size_t);
+int heap_malloc(Heap *, va_t, size_t);
 
 /*
- * Function : heap_Calloc
+ * Function : heap_calloc
  * ----------------------
  * Allocate a frame in the pool with a given amount of blocks then clear the
  * blocks.
@@ -89,10 +89,10 @@ int heap_Malloc(Heap *, va_t, size_t);
  * @param   : Size of frame
  * @return  : Error code
  */
-int heap_Calloc(Heap *, va_t, size_t);
+int heap_calloc(Heap *, va_t, size_t);
 
 /*
- * Function : heap_Realloc
+ * Function : heap_realloc
  * -----------------------
  * Enlarges/shrinks a frame, retaining its current data if possible.
  *
@@ -101,10 +101,10 @@ int heap_Calloc(Heap *, va_t, size_t);
  * @param   : Size of frame
  * @return  : Error code
  */
-int heap_Realloc(Heap *, va_t, size_t);
+int heap_realloc(Heap *, va_t, size_t);
 
 /*
- * Function : heap_Free
+ * Function : heap_free
  * --------------------
  * Frees a frame, allowing it to be reused again later.
  *
@@ -112,6 +112,6 @@ int heap_Realloc(Heap *, va_t, size_t);
  * @param   : Address in the pool (of the frame)
  * @return  : Error code
  */
-int heap_Free(Heap *, va_t);
+int heap_free(Heap *, va_t);
 
 #endif /* HEAP_H */

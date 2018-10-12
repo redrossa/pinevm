@@ -12,36 +12,36 @@
 #include "../include/core.h"
 #include "../include/vm.h"
 
-int core_Initialise(VM *vm)
+int core_initialise(VM *vm)
 {
     Core *tmp = &vm->core;
 
     tmp->thread_num = 0;
     *tmp->thread_pool = (Thread) {0};
-    sch_Initialise(&tmp->scheduler);
+    sch_initialise(&tmp->scheduler);
 
     return 0;
 }
 
-int core_Finalise(VM *vm)
+int core_finalise(VM *vm)
 {
     Core *tmp = &vm->core;
 
     /* Traverse through thread pool to finalise all alive thread_pool */
     for (va_t i = 0x0; i < THREAD_LIMIT; i++)
         if ((tmp->thread_pool[i].flag & (THR_ALIVE | THR_RUN | THR_SLEEP)) == (THR_ALIVE | THR_RUN | THR_SLEEP))
-            thr_Kill(vm, i);
+            thr_kill(vm, i);
 
     return 0;
 }
 
-inline int core_Run(VM *vm)
+inline int core_run(VM *vm)
 {
-    thr_Spawn(vm, 0x10); /* Spawn Master Thread */
-    return thr_Run(vm, 0x0); /* Run Master Thread */
+    thr_spawn(vm, 0x10); /* Spawn Master Thread */
+    return thr_run(vm, 0x0); /* Run Master Thread */
 }
 
-int core_ManageThread(VM *vm, va_t tid)
+int core_managethread(VM *vm, va_t tid)
 {
     if (vm->core.thread_pool[0x0].flag & THR_DEAD)
         return 0;
@@ -58,22 +58,22 @@ int core_ManageThread(VM *vm, va_t tid)
 
     /* Sleep original thread if the the next thread to run is not the same */
     if (i != tid && tmp->thread_pool[tid].flag & THR_RUN)
-        thr_Sleep(vm, tid, tid-1);
+        thr_sleep(vm, tid, tid-1);
 
-    return (i == tid && tmp->thread_pool[tid].flag & THR_DEAD) ? core_Finalise(vm):  thr_Run(vm, i);
+    return (i == tid && tmp->thread_pool[tid].flag & THR_DEAD) ? core_finalise(vm):  thr_run(vm, i);
 }
 
-int core_Cycle(VM *vm, va_t tid)
+int core_cycle(VM *vm, va_t tid)
 {
     Core *tmp = &vm->core;
 
     /* Cycle scheduler */
-    sch_Cycle(&tmp->scheduler);
+    sch_cycle(&tmp->scheduler);
 
     /* Decrement thread_pool countdown */
     for (va_t i = 0x0; tmp->thread_pool[i].flag != THR_UNINIT; i++)
         if (tmp->thread_pool[i].flag == THR_SLEEP)
             tmp->thread_pool[i].countdown--;
 
-    return core_ManageThread(vm, tid);
+    return core_managethread(vm, tid);
 }

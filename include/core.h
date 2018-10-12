@@ -37,37 +37,37 @@ typedef struct PineVMCore
 } Core;
 
 /*
- * Function : core_Initialise
+ * Function : core_initialise
  * -------------------------
  * Initialises Core (its members).
  *
  * @param   : Pointer to VM instance
  * @return  : Error code
  */
-int core_Initialise(VM *);
+int core_initialise(VM *);
 
 /*
- * Function : core_Finalise
+ * Function : core_finalise
  * -------------------------
  * Finalises Core, free any dynamically allocated members.
  *
  * @param   : Pointer to VM instance
  * @return  : Error code
  */
-int core_Finalise(VM *);
+int core_finalise(VM *);
 
 /*
- * Function : core_Run
+ * Function : core_run
  * -------------------------
  * Runs core, spawns the master thread and run it.
  *
  * @param   : Pointer to VM instance
  * @return  : Error code
  */
-int core_Run(VM *);
+int core_run(VM *);
 
 /*
- * Function : core_ManageThread
+ * Function : core_managethread
  * -------------------------
  * Finds the thread that needs to be run after the previous thread has finished
  * a cycle. Could possibly set previous thread to sleep.
@@ -77,10 +77,10 @@ int core_Run(VM *);
  * @param   : Thread ID of the previous running thread
  * @return  : Error code
  */
-int core_ManageThread(VM *, va_t);
+int core_managethread(VM *, va_t);
 
 /*
- * Function : core_Cycle
+ * Function : core_cycle
  * -------------------------
  * Keep track of any sleeping threads' cooldown. Cycles scheduler.
  *
@@ -89,6 +89,6 @@ int core_ManageThread(VM *, va_t);
  * @param   : Tthread ID of the previous running thread
  * @return  : Error code
  */
-int core_Cycle(VM *, va_t);
+int core_cycle(VM *, va_t);
 
 #endif /* CORE_H */

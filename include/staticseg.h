@@ -37,7 +37,7 @@ typedef struct PineVMStaticSegment
 } StaticSeg;
 
 /*
- * Function : ssg_Initialise
+ * Function : ssg_initialise
  * -------------------------
  * Initialises static segment. Allocates static pool.
  *
@@ -45,10 +45,10 @@ typedef struct PineVMStaticSegment
  * @param   : Size of static pool to allocate
  * @return  : Error code
  */
-int ssg_Initialise(StaticSeg *, size_t);
+int ssg_initialise(StaticSeg *, size_t);
 
 /*
- * Function : ssg_Allocate
+ * Function : ssg_allocate
  * -------------------------
  * Allocates StaticData variable (Pointer to PrimitiveData) in static pool
  *
@@ -57,10 +57,10 @@ int ssg_Initialise(StaticSeg *, size_t);
  * @param   : Size of static variable to allocate
  * @return  : Error code
  */
-int ssg_Allocate(StaticSeg *, va_t, size_t);
+int ssg_allocate(StaticSeg *, va_t, size_t);
 
 /*
- * Function : ssg_Finalise
+ * Function : ssg_finalise
  * -------------------------
  * Finalises static segment. Frees any allocated StaticData in static pool and
  * finally frees the static pool itself.
@@ -68,6 +68,6 @@ int ssg_Allocate(StaticSeg *, va_t, size_t);
  * @param   : Pointer to StaticSeg instance
  * @return  : Error code
  */
-int ssg_Finalise(StaticSeg *);
+int ssg_finalise(StaticSeg *);
 
 #endif /* STATICSEG_H */

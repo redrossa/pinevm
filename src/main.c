@@ -18,11 +18,11 @@ int main(int argc, char *argv[])
     if (argc == 1)
     {
         printf("Missing arguments.\n");
-        retcode = opt_Help();
+        retcode = opt_help();
     }
     else if (argc == 2)
     {
-        retcode = opt_Execute(argv[1]);
+        retcode = opt_execute(argv[1]);
     }
     else
     {
@@ -31,22 +31,22 @@ int main(int argc, char *argv[])
             switch (opt)
             {
                 case 'e':
-                    retcode = opt_Execute(optarg);
+                    retcode = opt_execute(optarg);
                     break;
                 case 'v':
-                    retcode = opt_Version();
+                    retcode = opt_version();
                     break;
                 case 'h':
-                    retcode = opt_Help();
+                    retcode = opt_help();
                     break;
                 case ':':
                     printf("Missing argument(s) for: %c\n", optopt);
-                    retcode = opt_Help();
+                    retcode = opt_help();
                     break;
                 case '?':
                 default:
                     printf("Invalid option: %c\n", optopt);
-                    retcode = opt_Help();
+                    retcode = opt_help();
                     break;
             }
         }
