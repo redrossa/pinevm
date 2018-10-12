@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        while ((opt = getopt(argc, argv, ":e:dsvh")) != -1)
+        while ((opt = getopt(argc, argv, ":e:vh")) != -1)
         {
             switch (opt)
             {
