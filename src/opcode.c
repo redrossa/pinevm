@@ -547,8 +547,9 @@ opcode_t JUMP(VM *vm, va_t tid)
     Thread *thread = &vm->core.thread_pool[tid];
     va_t index_address;
 
-    /* Fetch codeseg_INDEX to which program will jump to */
-    index_address = fetch_code_8BYTES(vm, tid);
+    /* Fetch CODESEG_INDEX from a register to which thread will jump to */
+    index_address = DATA_RETRIEVER(*fetch_reg(vm, tid));
+
     /* Configure thread, jump to codeseg_INDEX */
     thread->flag = THR_RUN;
     thread->controlunit.progcountreg++;
@@ -563,8 +564,8 @@ opcode_t JUMP_IF_TRUE(VM *vm, va_t tid)
     Thread *thread = &vm->core.thread_pool[tid];
     va_t index_address;
 
-    /* Fetch CODESEG_INDEX to which program will jump to */
-    index_address = fetch_code_8BYTES(vm, tid);
+    /* Fetch CODESEG_INDEX from a register to which thread will jump to */
+    index_address = DATA_RETRIEVER(*fetch_reg(vm, tid));
 
     if (DATA_RETRIEVER(thread->controlunit.aritreg) == 1)
     {
@@ -582,8 +583,8 @@ opcode_t JUMP_IF_FALSE(VM *vm, va_t tid)
     Thread *thread = &vm->core.thread_pool[tid];
     va_t index_address;
 
-    /* Fetch codeseg_INDEX to which program will jump to */
-    index_address = fetch_code_8BYTES(vm, tid);
+    /* Fetch codeseg_INDEX from a register to which thread will jump to */
+    index_address = DATA_RETRIEVER(*fetch_reg(vm, tid));
 
     if (DATA_RETRIEVER(thread->controlunit.aritreg) == 0)
     {
