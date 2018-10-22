@@ -40,7 +40,7 @@ int opt_help(void)
         "List of possible options:\n"
         "   -h  : prints this message.\n"
         "   -e  : executes bytecode file. (args: file name in current directory)\n"
-        "   -v  : execute\n"
+        "   -v  : prints product version.\n"
     );
     return 0;
 }
