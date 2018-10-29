@@ -37,6 +37,8 @@ int main(int argc, char *argv[])
                 break;
         }
     }
+    if (optind == 1 && argc == 2)
+        retcode = opt_execute(argv[1]);
     if (optind == 1)
         printf("pvm: no options specified\n");
 
