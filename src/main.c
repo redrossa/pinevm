@@ -8,14 +8,6 @@ static struct option long_opts[] =
     {"help",    no_argument,       NULL, 'h'}
 };
 
-/*
- * The main function currently calls Create_Bin_File to create the bytecode
- * file. This is just temporary for the beta development. Once the alpha version
- * is released, Create_Bin_File is to be removed and main directly calls
- * pvm_Initialise which passes a file path to a bytecode binary file, assuming
- * it is available. Users have to create their own bytecode binary file with
- * their own implementation. The bytecode assembler is yet to be built.
- */
 int main(int argc, char *argv[])
 {
     int opt;
