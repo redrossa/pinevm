@@ -1,5 +1,12 @@
 #include "../include/options.h"
-#include <unistd.h>
+#include <getopt.h>
+
+static struct option long_opts[] =
+{
+    {"execute", required_argument, NULL, 'e'},
+    {"version", no_argument,       NULL, 'v'},
+    {"help",    no_argument,       NULL, 'h'}
+};
 
 /*
  * The main function currently calls Create_Bin_File to create the bytecode
@@ -12,45 +19,26 @@
 int main(int argc, char *argv[])
 {
     int opt;
-    int retcode;
+    int retcode = 0;
     extern char *optarg;
 
-    if (argc == 1)
+    while ((opt = getopt_long(argc, argv, "e:vh", long_opts, NULL)) != -1)
     {
-        printf("Missing arguments.\n");
-        retcode = opt_help();
-    }
-    else if (argc == 2)
-    {
-        retcode = opt_execute(argv[1]);
-    }
-    else
-    {
-        while ((opt = getopt(argc, argv, ":e:vh")) != -1)
+        switch (opt)
         {
-            switch (opt)
-            {
-                case 'e':
-                    retcode = opt_execute(optarg);
-                    break;
-                case 'v':
-                    retcode = opt_version();
-                    break;
-                case 'h':
-                    retcode = opt_help();
-                    break;
-                case ':':
-                    printf("Missing argument(s) for: %c\n", optopt);
-                    retcode = opt_help();
-                    break;
-                case '?':
-                default:
-                    printf("Invalid option: %c\n", optopt);
-                    retcode = opt_help();
-                    break;
-            }
+            case 'e':
+                retcode = opt_execute(optarg);
+                break;
+            case 'v':
+                retcode = opt_version();
+                break;
+            case 'h':
+                retcode = opt_help();
+                break;
         }
     }
+    if (optind == 1)
+        printf("pvm: no options specified\n");
 
     return retcode;
 }
