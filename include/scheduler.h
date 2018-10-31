@@ -1,6 +1,6 @@
 /*******************************************************************************
  * File             : scheduler.h
- * Directory        : pvm/include
+ * Path             : pvm/include
  * Author           : Muhammad Adriano Raksi
  * Created          : 08-05-18 (DD-MM-YY)
  *------------------------------------------------------------------------------
