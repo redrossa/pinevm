@@ -26,8 +26,8 @@ VM pvm_initialise(const char *path)
 
     /* Initialise data areas */
     csg_initialise(&vm.codeseg, path);
-    ssg_initialise(&vm.staticseg, (size_t) vm.codeseg.content[0] << 56 | (size_t) vm.codeseg.content[1] << 48 | (size_t) vm.codeseg.content[2] << 40 | (size_t) vm.codeseg.content[3] << 32 | vm.codeseg.content[4] << 24 | vm.codeseg.content[5] << 16 | vm.codeseg.content[6] << 8 | vm.codeseg.content[7]);
-    heap_initialise(&vm.heap, (size_t) vm.codeseg.content[8] << 56 | (size_t) vm.codeseg.content[9] << 48 | (size_t) vm.codeseg.content[10] << 40 | (size_t) vm.codeseg.content[11] << 32 | vm.codeseg.content[12] << 24 | vm.codeseg.content[13] << 16 | vm.codeseg.content[14] << 8 | vm.codeseg.content[15]);
+    ssg_initialise(&vm.staticseg, (size_t) vm.codeseg.content[0] << 56 | (size_t) vm.codeseg.content[1] << 48 | (size_t) vm.codeseg.content[2] << 40 | (size_t) vm.codeseg.content[3] << 32 | (size_t) vm.codeseg.content[4] << 24 | vm.codeseg.content[5] << 16 | (size_t) vm.codeseg.content[6] << 8 | (size_t) vm.codeseg.content[7]);
+    heap_initialise(&vm.heap, (size_t) vm.codeseg.content[8] << 56 | (size_t) vm.codeseg.content[9] << 48 | (size_t) vm.codeseg.content[10] << 40 | (size_t) vm.codeseg.content[11] << 32 | (size_t) vm.codeseg.content[12] << 24 | (size_t) vm.codeseg.content[13] << 16 | (size_t) vm.codeseg.content[14] << 8 | (size_t) vm.codeseg.content[15]);
     core_initialise(&vm);
 
     return vm;
