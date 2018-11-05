@@ -25,7 +25,7 @@ uninstall:
 	@rm /usr/local/bin/pvm
 
 # Recompile binfile.c to create a bytecode test binary file
-test:
+test: test/binfile.c
 	@gcc test/binfile.c -o binfile
 
 # Deletes VM executable in this directory
