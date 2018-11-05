@@ -21,7 +21,7 @@
 typedef struct PineVMHeapFrame
 {
     /* If this frame is free or not */
-    bool    free;
+    bool    occupied;
 
     /* Size of frame, which is actually the PrimitiveData array 'block' */
     size_t  framesize;
