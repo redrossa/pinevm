@@ -12,6 +12,7 @@
 #ifndef VM_H
 #define VM_H 0
 
+#include "memmap.h"
 #include "codeseg.h"
 #include "staticseg.h"
 #include "heap.h"
@@ -19,6 +20,12 @@
 
 typedef struct PineVM
 {
+    /*
+     * Maps the memory layout of the VM. Stores the addresses of the first
+     * frames of each segments.
+     */
+    MemMap memmap;
+
     /*
      * The input bytecode file is stored here. An array of int of size 1 stores
      * all the codes. Additional file information may be stored here too. @see:
@@ -28,9 +35,9 @@ typedef struct PineVM
     CodeSeg codeseg;
 
     /*
+     * @TODO: Update implementation
      * Stores static data of the program. Allocation for this segment within the
-     * VM must be made explicit in the bytecode. @see: pvm/include/staticseg.h
-     * to see the actual interface.
+     * VM must be made explicit in the bytecode.
      */
     StaticSeg staticseg;
 
