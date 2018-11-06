@@ -32,19 +32,31 @@ int core_finalise(VM *vm)
         if ((tmp->thread_pool[i].flag & (THR_ALIVE | THR_RUN | THR_SLEEP)) == (THR_ALIVE | THR_RUN | THR_SLEEP))
             thr_kill(vm, i);
 
-    return 0;
+    return THREAD_LIMIT;
 }
 
 inline int core_run(VM *vm)
 {
-    thr_spawn(vm, 0x10); /* Spawn Master Thread */
-    return thr_run(vm, 0x0); /* Run Master Thread */
+    va_t i;
+
+    thr_spawn(vm, 0x0); /* Spawn Master Thread */
+    do
+    {
+        i = thr_run(vm, 0x0);
+    } while(i < THREAD_LIMIT);
+
+    return i;
 }
 
+/*
+ * TODO: Try making this function return the ID of the thread to run next rather
+ *       than calling thr_run by itself as it returns. This way, recursion can
+ *       be kept limited so as to not overflowing native stack.
+ */
 int core_managethread(VM *vm, va_t tid)
 {
     if (vm->core.thread_pool[0x0].flag & THR_DEAD)
-        return 0;
+        return THREAD_LIMIT;
 
     va_t i;
     Core *tmp = &vm->core;
@@ -60,7 +72,7 @@ int core_managethread(VM *vm, va_t tid)
     if (i != tid && tmp->thread_pool[tid].flag & THR_RUN)
         thr_sleep(vm, tid, tid-1);
 
-    return (i == tid && tmp->thread_pool[tid].flag & THR_DEAD) ? core_finalise(vm):  thr_run(vm, i);
+    return (i == tid && tmp->thread_pool[tid].flag & THR_DEAD) ? core_finalise(vm) : i;
 }
 
 int core_cycle(VM *vm, va_t tid)
