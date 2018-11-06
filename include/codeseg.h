@@ -33,7 +33,7 @@ typedef struct PineVMCodeSegment
      * The bytecode file path that was passed by the user when running the this
      * VM program on the console.
      */
-    const char *filepath;
+    char *filepath;
 } CodeSeg;
 
 /*
@@ -47,7 +47,7 @@ typedef struct PineVMCodeSegment
  * @param   : Bytecode file path
  * @return  : Error code
  */
-int csg_initialise(CodeSeg *, const char *);
+int csg_initialise(CodeSeg *, const char *, FILE *);
 
 /*
  * Function : csg_finalise
