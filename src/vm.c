@@ -54,6 +54,7 @@ int pvm_finalise(VM *vm)
     ssg_finalise(&vm->staticseg);
     csg_finalise(&vm->codeseg);
     heap_finalise(&vm->heap);
+    
     return 0;
 }
 

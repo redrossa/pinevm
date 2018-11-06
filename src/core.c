@@ -4,9 +4,9 @@
  * Author           : Muhammad Adriano Raksi
  * Created          : 07-03-18 (DD-MM-YY)
  *------------------------------------------------------------------------------
- * Contains the implementation of the VM's core. The core controls each thread_pool
- * in the user's program, such as keeping track of which thread_pool to run and
- * having all thread_pool synchronised by using scheduler.
+ * Contains the implementation of the VM's core. The core controls each
+ * thread_pool in the user's program, such as keeping track of which thread_pool
+ * to run and having all thread_pool synchronised by using scheduler.
  ******************************************************************************/
 
 #include "../include/core.h"

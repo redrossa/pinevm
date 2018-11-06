@@ -4,8 +4,8 @@
  * Author           : Muhammad Adriano Raksi
  * Created          : 25-04-18 (DD-MM-YY)
  *------------------------------------------------------------------------------
- * Contains the implementation of the VM's staticsegic segment. User defined data
- * that is inserted into the heap are made up of VM's primitive data. Once
+ * Contains the implementation of the VM's staticsegic segment. User defined
+ * data that is inserted into the heap are made up of VM's primitive data. Once
  * defined, variables stored here cannot be freed by the user's will. They
  * are automatically freed by the VM once the user's program ends.
  ******************************************************************************/
