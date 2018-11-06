@@ -43,7 +43,6 @@ int thr_kill(VM *vm, va_t tid)
         tmp->flag = THR_DEAD;
 
     vm->core.thread_num--;
-
     return 0;
 }
 
@@ -58,7 +57,7 @@ int thr_run(VM *vm, va_t tid)
     tmp->flag = THR_RUN;
     tmp->controlunit.progcountreg++;
     tmp->controlunit.instrreg = vm->codeseg.content[tmp->controlunit.instrpointreg++];
-
+// printf("%d\n", tmp->controlunit.instrreg);
     opc_Execute[tmp->controlunit.instrreg](vm, tid); /* Actual VM operation */
 
     return core_cycle(vm, tid);

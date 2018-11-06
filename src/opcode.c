@@ -104,7 +104,7 @@ InstructionSet opc_Execute[256] =
 
     /* 0x09 */  MALLOC, CALLOC, REALLOC, FREE, STORE, GET,
 
-    /* 0x0E */  ALLOC_STATIC, STORE_STATIC, GET_STATIC,
+    /* 0x0F */  ALLOC_STATIC, STORE_STATIC, GET_STATIC,
 
     /* 0x12 */  JUMP, JUMP_IF_TRUE, JUMP_IF_FALSE,
 
@@ -126,6 +126,7 @@ opcode_t NOP(VM *vm, va_t tid)
 
 opcode_t HLT(VM *vm, va_t tid)
 {
+    printf("%d\n", vm->core.thread_pool[tid].controlunit.genpreg[0].i32);
     thr_kill(vm, tid);
     return vm->core.thread_pool[tid].controlunit.instrreg;
 }
@@ -142,6 +143,18 @@ opcode_t HLT(VM *vm, va_t tid)
     ((data).storage == UI64 ? (data).ui64 :\
     ((data).storage == DBL ? (data).dbl :\
     ((data).va)))))))))\
+)
+
+#define DATA_RETRIEVER_INT(data)\
+(\
+    (data).storage == I8 ? (data).i8 :\
+    ((data).storage == I16 ? (data).i16 :\
+    ((data).storage == I32 ? (data).i32 :\
+    ((data).storage == I64 ? (data).i64 :\
+    ((data).storage == UI8 ? (data).ui8 :\
+    ((data).storage == UI16 ? (data).ui16 :\
+    ((data).storage == UI32 ? (data).ui32 :\
+    (data).ui64))))))\
 )
 
 /*
@@ -201,7 +214,7 @@ opcode_t LOAD(VM *vm, va_t tid)
             break;
         case 9:
             prot.storage = VA;
-            prot.va = fetch_code_4BYTES(vm, tid);
+            prot.va = fetch_code_8BYTES(vm, tid);
             break;
     }
 
@@ -213,18 +226,16 @@ opcode_t LOAD(VM *vm, va_t tid)
 opcode_t MOVE(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
-    PrimitiveData *src, *dest, prot;
+    PrimitiveData *src, *dest;
 
     /* Fetch source register address */
     src = fetch_reg(vm, tid);
 
-    prot = *src;
-
     /* Fetch destination register address */
     dest = fetch_reg(vm, tid);
 
-    /* Destination register holds data in source register */
-    *dest = prot;
+    /* Copy src to dest */
+    memcpy(dest, src, sizeof(*dest));
 
     return thread->controlunit.instrreg;
 }
@@ -545,10 +556,12 @@ opcode_t GET_STATIC(VM *vm, va_t tid)
 opcode_t JUMP(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
+    PrimitiveData *reg;
     va_t index_address;
 
     /* Fetch CODESEG_INDEX from a register to which thread will jump to */
-    index_address = DATA_RETRIEVER(*fetch_reg(vm, tid));
+    reg = fetch_reg(vm, tid);
+    index_address = DATA_RETRIEVER_INT(*reg);
 
     /* Configure thread, jump to codeseg_INDEX */
     thread->flag = THR_RUN;
@@ -562,10 +575,12 @@ opcode_t JUMP(VM *vm, va_t tid)
 opcode_t JUMP_IF_TRUE(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
+    PrimitiveData *reg;
     va_t index_address;
 
     /* Fetch CODESEG_INDEX from a register to which thread will jump to */
-    index_address = DATA_RETRIEVER(*fetch_reg(vm, tid));
+    reg = fetch_reg(vm, tid);
+    index_address = DATA_RETRIEVER_INT(*reg);
 
     if (DATA_RETRIEVER(thread->controlunit.aritreg) == 1)
     {
@@ -581,10 +596,12 @@ opcode_t JUMP_IF_TRUE(VM *vm, va_t tid)
 opcode_t JUMP_IF_FALSE(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
+    PrimitiveData *reg;
     va_t index_address;
 
     /* Fetch codeseg_INDEX from a register to which thread will jump to */
-    index_address = DATA_RETRIEVER(*fetch_reg(vm, tid));
+    reg = fetch_reg(vm, tid);
+    index_address = DATA_RETRIEVER_INT(*reg);
 
     if (DATA_RETRIEVER(thread->controlunit.aritreg) == 0)
     {
@@ -602,18 +619,6 @@ opcode_t JUMP_IF_FALSE(VM *vm, va_t tid)
 /*
  *ARITHMETIC & BITWISE OPERATIONS
  */
-
- #define DATA_RETRIEVER_MATHS(data)\
- (\
-     (data).storage == I8 ? (data).i8 :\
-     ((data).storage == I16 ? (data).i16 :\
-     ((data).storage == I32 ? (data).i32 :\
-     ((data).storage == I64 ? (data).i64 :\
-     ((data).storage == UI8 ? (data).ui8 :\
-     ((data).storage == UI16 ? (data).ui16 :\
-     ((data).storage == UI32 ? (data).ui32 :\
-     (data).ui64))))))\
- )
 
 #define TYPE_UNSIGNED (UI8 | UI16 | UI32 | UI64)
 #define TYPE_SIGNED   ( I8 |  I16 |  I32 |  I64)
@@ -977,60 +982,60 @@ opcode_t MOD(VM *vm, va_t tid)
     {
         case I8:
             /* If overflows */
-            if (reg0->i8 % DATA_RETRIEVER_MATHS(*reg1) > SCHAR_MAX)
-                op_res.i8 = SCHAR_MIN + (reg0->i8 % DATA_RETRIEVER_MATHS(*reg1) - SCHAR_MAX);
+            if (reg0->i8 % DATA_RETRIEVER_INT(*reg1) > SCHAR_MAX)
+                op_res.i8 = SCHAR_MIN + (reg0->i8 % DATA_RETRIEVER_INT(*reg1) - SCHAR_MAX);
             /* If underflows */
-            else if (reg0->i8 % DATA_RETRIEVER_MATHS(*reg1) < SCHAR_MIN)
-                op_res.i8 = SCHAR_MAX + (reg0->i8 % DATA_RETRIEVER_MATHS(*reg1) - SCHAR_MIN);
+            else if (reg0->i8 % DATA_RETRIEVER_INT(*reg1) < SCHAR_MIN)
+                op_res.i8 = SCHAR_MAX + (reg0->i8 % DATA_RETRIEVER_INT(*reg1) - SCHAR_MIN);
             else
-                op_res.i8 = reg0->i8 % DATA_RETRIEVER_MATHS(*reg1);
+                op_res.i8 = reg0->i8 % DATA_RETRIEVER_INT(*reg1);
             break;
         case UI8:
-            op_res.ui8 = reg0->ui8 % DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui8 = reg0->ui8 % DATA_RETRIEVER_INT(*reg1);
             break;
         case I16:
             /* If overflows */
-            if (reg0->i16 % DATA_RETRIEVER_MATHS(*reg1) > SHRT_MAX)
-                op_res.i16 = SHRT_MIN + (reg0->i16 % DATA_RETRIEVER_MATHS(*reg1) - SHRT_MAX);
+            if (reg0->i16 % DATA_RETRIEVER_INT(*reg1) > SHRT_MAX)
+                op_res.i16 = SHRT_MIN + (reg0->i16 % DATA_RETRIEVER_INT(*reg1) - SHRT_MAX);
             /* If underflows */
-            else if (reg0->i16 % DATA_RETRIEVER_MATHS(*reg1) < SHRT_MIN)
-                op_res.i16 = SHRT_MAX + (reg0->i16 % DATA_RETRIEVER_MATHS(*reg1) - SHRT_MIN);
+            else if (reg0->i16 % DATA_RETRIEVER_INT(*reg1) < SHRT_MIN)
+                op_res.i16 = SHRT_MAX + (reg0->i16 % DATA_RETRIEVER_INT(*reg1) - SHRT_MIN);
             else
-                op_res.i16 = reg0->i16 % DATA_RETRIEVER_MATHS(*reg1);
+                op_res.i16 = reg0->i16 % DATA_RETRIEVER_INT(*reg1);
             break;
         case UI16:
-                op_res.ui16 = reg0->ui16 % DATA_RETRIEVER_MATHS(*reg1);
+                op_res.ui16 = reg0->ui16 % DATA_RETRIEVER_INT(*reg1);
             break;
         case I32:
             /* If overflows */
-            if (reg0->i32 % DATA_RETRIEVER_MATHS(*reg1) > INT_MAX)
-                op_res.i32 = INT_MIN + (reg0->i32 % DATA_RETRIEVER_MATHS(*reg1) - INT_MAX);
+            if (reg0->i32 % DATA_RETRIEVER_INT(*reg1) > INT_MAX)
+                op_res.i32 = INT_MIN + (reg0->i32 % DATA_RETRIEVER_INT(*reg1) - INT_MAX);
             /* If underflows */
-            else if (reg0->i32 % DATA_RETRIEVER_MATHS(*reg1) < INT_MIN)
-                op_res.i32 = INT_MAX + (reg0->i32 % DATA_RETRIEVER_MATHS(*reg1) - INT_MIN);
+            else if (reg0->i32 % DATA_RETRIEVER_INT(*reg1) < INT_MIN)
+                op_res.i32 = INT_MAX + (reg0->i32 % DATA_RETRIEVER_INT(*reg1) - INT_MIN);
             else
-                op_res.i32 = reg0->i32 % DATA_RETRIEVER_MATHS(*reg1);
+                op_res.i32 = reg0->i32 % DATA_RETRIEVER_INT(*reg1);
             break;
         case UI32:
-            op_res.ui32 = reg0->ui32 % DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui32 = reg0->ui32 % DATA_RETRIEVER_INT(*reg1);
             break;
         case I64:
             /* If overflows */
-            if (reg0->i64 % DATA_RETRIEVER_MATHS(*reg1) > LONG_MAX)
-                op_res.i64 = LONG_MIN + (reg0->i64 % DATA_RETRIEVER_MATHS(*reg1) - LONG_MAX);
+            if (reg0->i64 % DATA_RETRIEVER_INT(*reg1) > LONG_MAX)
+                op_res.i64 = LONG_MIN + (reg0->i64 % DATA_RETRIEVER_INT(*reg1) - LONG_MAX);
             /* If underflows */
-            else if (reg0->i64 % DATA_RETRIEVER_MATHS(*reg1) < LONG_MIN)
-                op_res.i64 = LONG_MAX + (reg0->i64 % DATA_RETRIEVER_MATHS(*reg1) - LONG_MIN);
+            else if (reg0->i64 % DATA_RETRIEVER_INT(*reg1) < LONG_MIN)
+                op_res.i64 = LONG_MAX + (reg0->i64 % DATA_RETRIEVER_INT(*reg1) - LONG_MIN);
             else
-                op_res.i64 = reg0->i64 % DATA_RETRIEVER_MATHS(*reg1);
+                op_res.i64 = reg0->i64 % DATA_RETRIEVER_INT(*reg1);
             break;
         case UI64:
-            op_res.ui64 = reg0->ui64 % DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui64 = reg0->ui64 % DATA_RETRIEVER_INT(*reg1);
             break;
         case DBL:
             break;
         case VA:
-            op_res.va = reg0->va % DATA_RETRIEVER_MATHS(*reg1);
+            op_res.va = reg0->va % DATA_RETRIEVER_INT(*reg1);
             break;
     }
 
@@ -1054,31 +1059,31 @@ opcode_t AND(VM *vm, va_t tid)
     switch (op_res.storage)
     {
         case I8:
-            op_res.i8 = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i8 = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         case UI8:
-            op_res.ui8 = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui8 = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         case I16:
-            op_res.i16 = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i16 = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         case UI16:
-            op_res.ui16 = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui16 = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         case I32:
-            op_res.i32 = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i32 = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         case UI32:
-            op_res.ui32 = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui32 = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         case I64:
-            op_res.i64 = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i64 = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         case UI64:
-            op_res.ui64 = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui64 = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         case VA:
-            op_res.va = DATA_RETRIEVER_MATHS(*reg0) & DATA_RETRIEVER_MATHS(*reg1);
+            op_res.va = DATA_RETRIEVER_INT(*reg0) & DATA_RETRIEVER_INT(*reg1);
             break;
         default:
             break;
@@ -1104,31 +1109,31 @@ opcode_t OR(VM *vm, va_t tid)
     switch (op_res.storage)
     {
         case I8:
-            op_res.i8 = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i8 = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         case UI8:
-            op_res.ui8 = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui8 = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         case I16:
-            op_res.i16 = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i16 = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         case UI16:
-            op_res.ui16 = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui16 = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         case I32:
-            op_res.i32 = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i32 = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         case UI32:
-            op_res.ui32 = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui32 = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         case I64:
-            op_res.i64 = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i64 = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         case UI64:
-            op_res.ui64 = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui64 = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         case VA:
-            op_res.va = DATA_RETRIEVER_MATHS(*reg0) | DATA_RETRIEVER_MATHS(*reg1);
+            op_res.va = DATA_RETRIEVER_INT(*reg0) | DATA_RETRIEVER_INT(*reg1);
             break;
         default:
             break;
@@ -1154,31 +1159,31 @@ opcode_t XOR(VM *vm, va_t tid)
     switch (op_res.storage)
     {
         case I8:
-            op_res.i8 = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i8 = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         case UI8:
-            op_res.ui8 = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui8 = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         case I16:
-            op_res.i16 = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i16 = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         case UI16:
-            op_res.ui16 = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui16 = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         case I32:
-            op_res.i32 = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i32 = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         case UI32:
-            op_res.ui32 = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui32 = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         case I64:
-            op_res.i64 = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i64 = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         case UI64:
-            op_res.ui64 = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui64 = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         case VA:
-            op_res.va = DATA_RETRIEVER_MATHS(*reg0) ^ DATA_RETRIEVER_MATHS(*reg1);
+            op_res.va = DATA_RETRIEVER_INT(*reg0) ^ DATA_RETRIEVER_INT(*reg1);
             break;
         default:
             break;
@@ -1203,25 +1208,25 @@ opcode_t NOT(VM *vm, va_t tid)
     switch (op_res.storage)
     {
         case I8:
-            op_res.i8 = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.i8 = ~DATA_RETRIEVER_INT(*reg0);
         case I16:
-            op_res.i16 = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.i16 = ~DATA_RETRIEVER_INT(*reg0);
         case I32:
-            op_res.i32 = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.i32 = ~DATA_RETRIEVER_INT(*reg0);
         case I64:
-            op_res.i64 = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.i64 = ~DATA_RETRIEVER_INT(*reg0);
         case UI8:
-            op_res.ui8 = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.ui8 = ~DATA_RETRIEVER_INT(*reg0);
         case UI16:
-            op_res.ui16 = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.ui16 = ~DATA_RETRIEVER_INT(*reg0);
         case UI32:
-            op_res.ui32 = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.ui32 = ~DATA_RETRIEVER_INT(*reg0);
         case UI64:
-            op_res.ui64 = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.ui64 = ~DATA_RETRIEVER_INT(*reg0);
         case DBL:
-            op_res.dbl = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.dbl = ~DATA_RETRIEVER_INT(*reg0);
         case VA:
-            op_res.va = ~DATA_RETRIEVER_MATHS(*reg0);
+            op_res.va = ~DATA_RETRIEVER_INT(*reg0);
     }
 
     thread->controlunit.aritreg = op_res;
@@ -1245,31 +1250,31 @@ opcode_t LSHIFT(VM *vm, va_t tid)
     switch (op_res.storage)
     {
         case I8:
-            op_res.i8 = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i8 = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         case UI8:
-            op_res.ui8 = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui8 = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         case I16:
-            op_res.i16 = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i16 = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         case UI16:
-            op_res.ui16 = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui16 = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         case I32:
-            op_res.i32 = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i32 = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         case UI32:
-            op_res.ui32 = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui32 = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         case I64:
-            op_res.i64 = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i64 = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         case UI64:
-            op_res.ui64 = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui64 = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         case VA:
-            op_res.va = DATA_RETRIEVER_MATHS(*reg0) << DATA_RETRIEVER_MATHS(*reg1);
+            op_res.va = DATA_RETRIEVER_INT(*reg0) << DATA_RETRIEVER_INT(*reg1);
             break;
         default:
             break;
@@ -1296,31 +1301,31 @@ opcode_t RSHIFT(VM *vm, va_t tid)
     switch (op_res.storage)
     {
         case I8:
-            op_res.i8 = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i8 = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         case UI8:
-            op_res.ui8 = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui8 = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         case I16:
-            op_res.i16 = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i16 = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         case UI16:
-            op_res.ui16 = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui16 = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         case I32:
-            op_res.i32 = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i32 = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         case UI32:
-            op_res.ui32 = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui32 = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         case I64:
-            op_res.i64 = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.i64 = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         case UI64:
-            op_res.ui64 = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.ui64 = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         case VA:
-            op_res.va = DATA_RETRIEVER_MATHS(*reg0) >> DATA_RETRIEVER_MATHS(*reg1);
+            op_res.va = DATA_RETRIEVER_INT(*reg0) >> DATA_RETRIEVER_INT(*reg1);
             break;
         default:
             break;
