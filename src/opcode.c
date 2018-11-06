@@ -126,7 +126,6 @@ opcode_t NOP(VM *vm, va_t tid)
 
 opcode_t HLT(VM *vm, va_t tid)
 {
-    printf("%d\n", vm->core.thread_pool[tid].controlunit.genpreg[0].i32);
     thr_kill(vm, tid);
     return vm->core.thread_pool[tid].controlunit.instrreg;
 }
