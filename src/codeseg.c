@@ -9,24 +9,22 @@
 
 #include "../include/codeseg.h"
 
-int csg_initialise(CodeSeg * codeseg, const char * path)
+int csg_initialise(CodeSeg * codeseg, const char * path, FILE * fp)
 {
     size_t size;
-    FILE * fp;
+    long int initial_pos;
 
-    fp = fopen(path, "rb");
-    if (fp == NULL)
-        return pvm_reporterror(CODESEG_H, __FUNCTION__, "File not found");
-
+    /* Find the size of code segment to be allocated */
+    initial_pos = ftell(fp);
     fseek(fp, 0, SEEK_END);
-    size = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    size = ftell(fp) - initial_pos;
+    fseek(fp, initial_pos, SEEK_SET);
 
+    /* Initialise code segment */
     codeseg->size = size;
-    codeseg->content = malloc(sizeof(opcode_t) * size + 1);
-    fread(codeseg->content, size, 1, fp);
-    codeseg->filepath = path;
-    fclose(fp);
+    codeseg->content = malloc(sizeof(opcode_t) * size);
+    fread(codeseg->content, sizeof(opcode_t) * size, 1, fp);
+    realpath(path, codeseg->filepath);
 
     return 0;
 }
