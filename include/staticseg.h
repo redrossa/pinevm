@@ -45,7 +45,7 @@ typedef struct PineVMStaticSegment
  * @param   : Size of static pool to allocate
  * @return  : Error code
  */
-int ssg_initialise(StaticSeg *, size_t);
+int ssg_initialise(StaticSeg *, FILE *);
 
 /*
  * Function : ssg_allocate
