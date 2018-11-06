@@ -5,8 +5,8 @@ int main(int argc, char **argv)
     FILE *fp;
 
     /*
-     * The buffer below is an implementation of loop from 0 to 10 in
-     * the VM's bytecode. Change the size if necessary.
+     * The buffer below is an implementation of loop from 0 to 655334 in the
+     * VM's bytecode. This bytecode also stores a static data of 32 bits.
      */
     unsigned char buffer[80] =
     {
