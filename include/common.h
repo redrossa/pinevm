@@ -39,9 +39,16 @@ typedef struct PineVMData
 extern int pvm_handle(int, const char *, int);
 extern int pvm_reporterror(int, const char *, const char *);
 
+#define MAGIC_NUMBER 0xEB1CFA17
+
 #define VA_GETSIZE(vadr) ((vadr) + 1)
 #define VA_GETVADR(size) ((size) - 1)
 #define VA_SUCCEED(vadr) ((vadr) + 1)
 #define VA_PRECEED(vadr) ((vadr) - 1)
+
+#define REVERSE_32(num)\
+(\
+    ((num>>24)&0xff) | ((num<<8)&0xff0000) | ((num>>8)&0xff00) | ((num<<24)&0xff000000)\
+)
 
 #endif /* COMMON_H */
