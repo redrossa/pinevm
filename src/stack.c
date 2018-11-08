@@ -10,8 +10,6 @@
 
 #include "../include/stack.h"
 
-#define STACK_SIZE 0x400
-
 int stk_initialise(Stack *stack)
 {
     *stack = (Stack) {.pointer = 0, .primdata_arr = malloc(sizeof(PrimitiveData) *STACK_SIZE)};
