@@ -88,6 +88,10 @@ opcode_t LOG_OR(VM *, va_t);
 opcode_t LOG_NOT(VM *, va_t);
 /* END RELATIONAL & LOGICAL OPERATIONS */
 
+/* SCHEDULER INSTRUCTION */
+opcode_t STAMP(VM *, va_t);
+/* END SCHEDULER INSTRUCTION */
+
 /*
  * END OPCODE FUNCTION PROTOTYPES
  */
@@ -528,7 +532,7 @@ opcode_t GET_STATIC(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
     va_t va, offset;
-    PrimitiveData *reg, prot;
+    PrimitiveData *reg;
 
     /* Fetch STATIC_ADDRESS (8 bytes) */
     va = fetch_code_8BYTES(vm, tid);
@@ -540,8 +544,8 @@ opcode_t GET_STATIC(VM *vm, va_t tid)
     reg = fetch_reg(vm, tid);
 
     /* Get static data in static segment of given address to register */
-    prot = vm->staticseg.var_pool[va].primdata_arr[offset];
-    *reg = prot;
+    *reg = vm->staticseg.var_pool[va].primdata_arr[offset];
+
 
     return thread->controlunit.instrreg;
 }
@@ -1488,19 +1492,40 @@ opcode_t LOG_OR(VM *vm, va_t tid)
 opcode_t LOG_NOT(VM *vm, va_t tid)
 {
     Thread *thread = &vm->core.thread_pool[tid];
-    PrimitiveData *reg0, op_res;
+    PrimitiveData *reg, op_res;
 
-    /* Fetch REGISTER_ADDRESS_0 */
-    reg0 = fetch_reg(vm, tid);
+    /* Fetch REGISTER_ADDRESS */
+    reg = fetch_reg(vm, tid);
 
     op_res.storage = I8;
-    op_res.i8 = !DATA_RETRIEVER(*reg0)? 1 : 0;
+    op_res.i8 = !DATA_RETRIEVER(*reg)? 1 : 0;
     thread->controlunit.aritreg = op_res;
 
     return thread->controlunit.instrreg;
 }
 
 /* END RELATIONAL & LOGICAL OPERATIONS */
+
+/*
+ * SCHEDULER INSTRUCTION
+ */
+
+opcode_t STAMP(VM * vm, va_t tid)
+{
+    Thread *thread = &vm->core.thread_pool[tid];
+    PrimitiveData *reg, op_res;
+
+    /* Fetch REGISTER_ADDRESS */
+    reg = fetch_reg(vm, tid);
+
+    op_res.storage = UI64;
+    op_res.ui64 = sch_stamp(&vm->core.scheduler);
+    *reg = op_res;
+
+    return thread->controlunit.instrreg;
+}
+
+/* END SCHEDULER INSTRUCTION */
 
 /*
  *UTILITY FUNCTIONS
