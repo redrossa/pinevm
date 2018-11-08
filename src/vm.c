@@ -38,11 +38,17 @@ VM pvm_initialise(const char *path)
     if (fheader != MAGIC_NUMBER)
         pvm_reporterror(VM_H, __FUNCTION__, "Incorrect file type");
 
-
+    /* Initialise segments */
     ssg_initialise(&vm.staticseg, fp);
+    heap_initialise(&vm.heap, fp);
     csg_initialise(&vm.codeseg, path, fp);
-    heap_initialise(&vm.heap, 0x10000000);
     core_initialise(&vm);
+
+    /* Initialise memory map */
+    vm.memmap.codeseg = 0;
+    vm.memmap.staticseg = vm.codeseg.size;
+    vm.memmap.stack = vm.memmap.staticseg + vm.staticseg.totaldata;
+    vm.memmap.heap = vm.memmap.stack + STACK_SIZE;
 
     fclose(fp);
 
@@ -54,7 +60,7 @@ int pvm_finalise(VM *vm)
     ssg_finalise(&vm->staticseg);
     csg_finalise(&vm->codeseg);
     heap_finalise(&vm->heap);
-    
+
     return 0;
 }
 
