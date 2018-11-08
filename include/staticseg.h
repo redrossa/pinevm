@@ -29,6 +29,9 @@ typedef struct
 
 typedef struct PineVMStaticSegment
 {
+    /* Size of primitive data of var_pool altogether */
+    size_t totaldata;
+
     /* Size of pool */
     size_t size;
 
