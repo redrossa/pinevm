@@ -12,8 +12,11 @@
 #include "../include/heap.h"
 #include <string.h>
 
-int heap_initialise(Heap *heap, size_t size)
+int heap_initialise(Heap *heap, FILE *fp)
 {
+    size_t size;
+    fread(&size, sizeof(uint32_t), 1, fp);
+    size = REVERSE_32(size);
     heap->freeframes = heap->size = size;
     heap->totalblocks = 0;
     heap->var_pool = malloc(sizeof(HeapFrame) * size);
@@ -32,6 +35,8 @@ int heap_initialise(Heap *heap, size_t size)
  */
 int heap_finalise(Heap *heap)
 {
+    if (heap->size == 0)
+        return 0;
     heap->totalblocks = heap->freeframes = 0;
     free(heap->var_pool);
 
