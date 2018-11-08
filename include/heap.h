@@ -54,7 +54,7 @@ typedef struct PineVMHeap
  * @param   : Size of pool to allocate
  * @return  : Error code
  */
-int heap_initialise(Heap *, size_t size);
+int heap_initialise(Heap *, FILE *);
 
 /*
  * Function : heap_finalise
