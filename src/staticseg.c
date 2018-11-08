@@ -16,6 +16,7 @@
 int ssg_initialise(StaticSeg *staticseg, FILE * fp)
 {
     int type;
+    size_t totaldata = 0;
 
     /* Initialise staticseg */
     fread(&staticseg->size, sizeof(uint32_t), 1, fp);
@@ -30,7 +31,7 @@ int ssg_initialise(StaticSeg *staticseg, FILE * fp)
         staticseg->var_pool[i].primdata_arr = malloc(sizeof(PrimitiveData) * staticseg->var_pool[i].size);
 
         /* Traverse to initialise primitive data in a var_pool */
-        for (int j = 0; j < staticseg->var_pool[i].size; j++)
+        for (int j = 0; j < staticseg->var_pool[i].size; j++, totaldata++)
         {
             fread(&type, sizeof(uint8_t), 1, fp);
             switch (type)
@@ -78,6 +79,8 @@ int ssg_initialise(StaticSeg *staticseg, FILE * fp)
             }
         }
     }
+
+    staticseg->totaldata = totaldata;
 
     return 0;
 }
