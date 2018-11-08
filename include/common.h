@@ -40,6 +40,7 @@ extern int pvm_handle(int, const char *, int);
 extern int pvm_reporterror(int, const char *, const char *);
 
 #define MAGIC_NUMBER 0xEB1CFA17
+#define STACK_SIZE 0x400
 
 #define VA_GETSIZE(vadr) ((vadr) + 1)
 #define VA_GETVADR(size) ((size) - 1)
