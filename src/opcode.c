@@ -114,7 +114,9 @@ InstructionSet opc_Execute[256] =
 
     /* 0x15 */  ADD, SUB, MUL, DIV, MOD, AND, XOR, OR, NOT, LSHIFT, RSHIFT,
 
-    /* 0x20 */  LESS, LESS_EQ, GREAT, GREAT_EQ, EQUAL, N_EQUAL, LOG_AND, LOG_OR, LOG_NOT
+    /* 0x20 */  LESS, LESS_EQ, GREAT, GREAT_EQ, EQUAL, N_EQUAL, LOG_AND, LOG_OR, LOG_NOT,
+
+    /* 0x28 */  STAMP
 };
 
 #define fetch_code_2BYTES(vm, tid) ((fetch_code(vm, tid) << 8) | fetch_code(vm, tid))
