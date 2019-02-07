@@ -21,6 +21,7 @@
 *.a
 *.la
 *.lo
+*.git
 
 # Shared objects (inc. Windows DLLs)
 *.dll
